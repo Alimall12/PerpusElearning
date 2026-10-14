@@ -1,64 +1,71 @@
-# Sistem Perpustakaan
+# 📚 PerpusElearning - Sistem Informasi & Perpustakaan Digital
 
-Aplikasi manajemen perpustakaan menggunakan Laravel 13 dengan fitur CRUD buku dan autentikasi admin.
+Aplikasi perpustakaan digital berbasis web menggunakan Laravel, Tailwind CSS, dan Alpine.js. Dibangun untuk kebutuhan tugas e-learning pemrograman web selama PKL.
 
-## Fitur
+---
 
-- ✅ CRUD Data Buku (Create, Read, Update, Delete)
-- ✅ Validasi Form Input
-- ✅ Konfirmasi Hapus Data
-- ✅ Sistem Login Admin (Laravel Breeze)
-- ✅ Dashboard Admin
+## 🌟 Fitur Utama
 
-## Teknologi
+### 1. Pengguna & Anggota (Siswa / Pembaca)
+- **Autentikasi & Registrasi**: Login, Register akun, lengkapi profil keanggotaan.
+- **Katalog Buku Interaktif**:
+  - Filter checklist multi-select model accordion (Kategori/Genre bertingkat, Pengarang, Penerbit).
+  - Pencarian instan (Judul & Pengarang).
+  - Slider cover depan dan cover belakang buku (Alpine.js).
+- **Review & Rating**: Ulasan komentar dan rating bintang 1–5 pada tiap buku.
+- **Peminjaman Mandiri**: Ajukan pinjam buku secara langsung dengan validasi stok otomatis.
+- **Baca Online (E-Reader)**: Baca buku digital langsung di browser untuk buku yang sedang dipinjam.
+- **Wishlist Buku**: Simpan daftar buku favorit / dibaca nanti.
+- **Pengembalian Mandiri**: Kembalikan buku pinjaman melalui menu peminjaman.
 
-- Laravel 13.17
-- PHP 8.3
-- MySQL 8.4
-- Laravel Breeze (Authentication)
-- Tailwind CSS & Bootstrap 5
+### 2. Admin Perpustakaan
+- **Dashboard Statistik**: Ringkasan stok buku, total anggota, dan peminjaman aktif.
+- **Kelola Buku (CRUD)**:
+  - Input kode buku otomatis/manual, judul, pengarang, penerbit, tahun, stok.
+  - Upload file e-book (PDF) dan cover depan/belakang buku.
+  - Multi-level genre selector.
+- **Kelola Anggota (CRUD)**: Manajemen data siswa/anggota perpustakaan.
+- **Kelola Peminjaman**: Pantau status peminjaman, batas tanggal kembali, dan denda.
 
-## Struktur Database
+---
 
-**Database:** `db_perpus`
+## 🛠️ Kebutuhan Sistem
 
-**Tabel buku:**
-- id (bigint, auto increment, primary key)
-- kode_buku (varchar 20, unique)
-- judul (varchar 150)
-- pengarang (varchar 100)
-- penerbit (varchar 100)
-- tahun_terbit (year)
-- stok (int)
-- created_at, updated_at (timestamp)
+- PHP >= 8.2
+- Composer >= 2.x
+- Node.js & NPM (versi LTS)
+- Database: MySQL (Laragon / XAMPP) atau SQLite
 
-## Instalasi
+---
 
-### 1. Clone / Download Project
+## 🚀 Panduan Instalasi Lokal
 
+### 1. Clone Repository
 ```bash
-cd d:/laragon/www
-# Atau lokasi project Anda
+git clone https://github.com/Alimall12/PerpusElearning.git
+cd PerpusElearning
 ```
 
-### 2. Install Dependencies
-
+### 2. Install Dependency PHP & Node.js
 ```bash
-cd perpustakaan
 composer install
 npm install
 ```
 
-### 3. Konfigurasi Environment
-
-Copy `.env.example` menjadi `.env`:
-
+### 3. Setup File Environment
+Salin template konfigurasi `.env`:
 ```bash
 copy .env.example .env
 ```
+Generate application key:
+```bash
+php artisan key:generate
+```
 
-Edit `.env` sesuai database Anda:
+### 4. Konfigurasi Database di `.env`
+Buka file `.env` dan sesuaikan koneksi database Anda:
 
+**Opsi A (MySQL - Laragon / XAMPP):**
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -67,97 +74,74 @@ DB_DATABASE=db_perpus
 DB_USERNAME=root
 DB_PASSWORD=
 ```
+*(Pastikan database `db_perpus` sudah dibuat di phpMyAdmin / HeidiSQL).*
 
-Generate application key:
-
-```bash
-php artisan key:generate
+**Tambahkan password default admin di `.env`:**
+```env
+ADMIN_DEFAULT_PASSWORD=admin123
 ```
 
-### 4. Jalankan Migration
-
+### 5. Jalankan Migrasi & Seeder
 ```bash
-php artisan migrate
+php artisan migrate --seed
 ```
 
-### 5. Buat Akun Admin
-
+### 6. Hubungkan Storage Upload Gambar & E-Book
+**Wajib** dijalankan agar cover buku dan file PDF muncul di browser:
 ```bash
-php artisan db:seed --class=AdminSeeder
+php artisan storage:link
 ```
 
-**Kredensial Admin:**
-- Email: `admin@perpustakaan.com`
-- Password: `admin123`
-
-### 6. Build Assets
-
+### 7. Compile Asset Frontend
 ```bash
 npm run build
+# Atau untuk mode development:
+npm run dev
 ```
 
-### 7. Jalankan Aplikasi
-
+### 8. Jalankan Server Lokal
 ```bash
 php artisan serve
 ```
+Aplikasi dapat diakses di: **`http://127.0.0.1:8000`**
 
-Aplikasi berjalan di: **http://127.0.0.1:8000**
+---
 
-## Cara Menggunakan
+## 🔑 Akun Bawaan (Default Credentials)
 
-### Login Admin
+| Role | Email | Password | Keterangan |
+|------|-------|----------|------------|
+| **Admin** | `admin@perpustakaan.com` | `admin123` | Akses dashboard, kelola buku, anggota & transaksi |
+| **User Demo** | `test@example.com` | `password` | Akun anggota demo untuk uji coba peminjaman |
 
-1. Buka browser: http://127.0.0.1:8000/login
-2. Login dengan kredensial:
-   - Email: `admin@perpustakaan.com`
-   - Password: `admin123`
-3. Setelah login, klik tombol **"Kelola Data Buku"** di dashboard
+---
 
-### Menu Kelola Buku
-
-URL: http://127.0.0.1:8000/buku
-
-**Operasi:**
-- **Tambah Buku:** Klik tombol "+ Tambah Buku"
-- **Edit Buku:** Klik tombol "Edit" pada baris data
-- **Hapus Buku:** Klik tombol "Hapus" (akan muncul konfirmasi)
-
-**Validasi Form:**
-- Kode Buku: required, unique
-- Judul: required
-- Pengarang: required
-- Penerbit: required
-- Tahun Terbit: required, numeric
-- Stok: required, numeric
-
-### Logout
-
-Klik menu profile di kanan atas → Log Out
-
-## Struktur File Penting
+## 📁 Struktur Folder Penting
 
 ```
 perpustakaan/
 ├── app/
 │   ├── Http/Controllers/
-│   │   └── BukuController.php          # Controller CRUD Buku
+│   │   ├── BukuController.php          # CRUD Buku & e-reader PDF
+│   │   ├── KatalogController.php       # Katalog filter checklist & pencarian
+│   │   ├── PeminjamanController.php    # Transaksi pinjam & kembali
+│   │   ├── ReviewController.php        # Rating & ulasan buku
+│   │   └── WishlistController.php      # Fitur simpan wishlist
 │   └── Models/
-│       └── Buku.php                     # Model Buku
+├── config/
+│   └── genres.php                      # Mapping kategori & kode klasifikasi genre
 ├── database/
-│   ├── migrations/
-│   │   └── xxxx_create_buku_table.php   # Migration tabel buku
-│   └── seeders/
-│       └── AdminSeeder.php              # Seeder admin
+│   ├── migrations/                     # Skema tabel database
+│   └── seeders/                        # Data awal admin & akun demo
 ├── resources/views/
-│   ├── buku/
-│   │   ├── index.blade.php              # Daftar buku
-│   │   ├── create.blade.php             # Form tambah buku
-│   │   └── edit.blade.php               # Form edit buku
-│   └── dashboard.blade.php              # Dashboard admin
+│   ├── buku/                           # View CRUD buku (Admin)
+│   ├── katalog/                        # Tampilan katalog & detail buku
+│   ├── peminjaman/                     # Riwayat & status peminjaman
+│   └── wishlist/                       # Daftar simpan buku
 └── routes/
-    └── web.php                          # Route definitions
+    └── web.php                         # Definisi semua rute web
 ```
+
 
 ## Troubleshooting
 
